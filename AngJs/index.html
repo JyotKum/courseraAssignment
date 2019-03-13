@@ -17,17 +17,15 @@
 
         <div>
 
-          <form ng-submit="narrowCtrl.searchMenuItems()">
+          
             <div>
-              <input ng-model="narrowCtrl.searchTerm"  id="keyword">
-              <label for="keyword">Search term</label>
-            </div>
-          </form>
-
-          <button ng-click="narrowCtrl.searchMenuItems()">
+              
+              <input type="text" placeholder="search term" ng-model="narrowCtrl.searchTerm">
+              <button ng-click="narrowCtrl.searchMenuItems()">
             Narrow It Down For Me!
           </button>
-
+            </div>
+  
         </div>
       </div>
 
