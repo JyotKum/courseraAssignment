@@ -1,39 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Narrow Down Your Menu Choice</title>
+    
+  <script src="angular.min.js"></script>
+  <script src="app.js"></script>
+  </head>
+  <body ng-app="NarrowItDownApp" class="ng-scope">
+   <div class="container ng-scope" ng-controller="NarrowItDownController as ctrl">
+    <h1>Narrow Down Your Chinese Menu Choice</h1>
 
-<meta charset="utf-8">
-<script src="angular.min.js"></script>
-<script src="app.js"></script>
-<h2>Shopping List check off</h2>
+    <div class="form-group">
+      <input type="text" placeholder="search term" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="ctrl.searchTerm">
+    </div>
+    <div class="form-group narrow-button">
+      <button class="btn btn-primary" ng-click="ctrl.callFunc();">Narrow It Down For Me!</button>
+    </div>
 
-</head>
-
-<body ng-app="ShoppingListCheckOff">
-
-  <div ng-controller="ToBuyController as buyController" >
-<h1>To Buy :</h1>
-<div ng-if="buyController.items.length===0">
-<p>EveryThing is bought !</p>
-</div>
-<ul>
-<li ng-repeat="item in buyController.items">Buy {{item.quantity}} {{item.name}}
-<button ng-click="buyController.sendToBuyingList($index)" >Bought</button></li>
+    <!-- found-items should be implemented as a component -->
+    <found-items found-item="ctrl.found" on-remove="ctrl.removeItem()" search="ctrl.searchTerm" class="ng-isolate-scope"><ul>
+  <!-- ngRepeat: item in cntrl.foundItem -->
 </ul>
+<!-- ngIf: cntrl.nothing() --></found-items>
+  </div>
 
- </div>
 
- <div ng-controller="AlreadyBoughtController as bougtController" >
- <h1>Already Bought :</h1>
- <div ng-if="bougtController.bought.length===0">
- <p>
- Nothing bought yet
- </p></div>
-<ol>
- <li ng-repeat="item in bougtController.bought">Bought {{item.quantity}} {{item.name}}
- </ol>
- </div>
+
 </body>
- 
-
 </html>
