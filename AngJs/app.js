@@ -4,7 +4,7 @@
  angular.module('NarrowItDownApp', [])
 .controller('NarrowItDownController', NarrowItDownController)
 .service('MenuSearchService', MenuSearchService)
-.directive('foundItems', foundItems)
+.directive('listItem', listItem)
 .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
 
 
@@ -53,7 +53,7 @@ function NarrowItDownController(MenuSearchService) {
 	 //console.log("callFunc is called");
 	 //ctrl.found=MenuSearchService.getMatchedMenuItems(ctrl.searchTerm);
 	 //console.log("ctrl.found is :");
-	 //console.log(ctrl.foundItems);
+	 console.log(ctrl.foundItems);
 
 	 var promise=MenuSearchService.getMatchedMenuItems(ctrl.searchTerm);
 	 promise.then(function (result) {
