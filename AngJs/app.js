@@ -8,7 +8,7 @@
 .constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
 
 
-function foundItems() {
+function listItem() {
 	var ddo={
 		templateUrl: 'listItem.html',
 		scope: {
