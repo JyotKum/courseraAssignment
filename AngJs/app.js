@@ -1,67 +1,108 @@
-(function (){
-'use strict';
-angular.module('ShoppingListCheckOff',[])
-.controller('ToBuyController',ToBuyController)
-.controller('AlreadyBoughtController',AlreadyBoughtController)
-.service('ShoppingListCheckOffService',ShoppingListCheckOffService);
+( function () {
+	'use strict';
 
-ToBuyController.$inject=['ShoppingListCheckOffService'];
+ angular.module('NarrowItDownApp', [])
+.controller('NarrowItDownController', NarrowItDownController)
+.service('MenuSearchService', MenuSearchService)
+.directive('foundItems', foundItems)
+.constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
 
-function ToBuyController(ShoppingListCheckOffService){
-	var buyController=this;
-	buyController.items=ShoppingListCheckOffService.getItem();
-	buyController.sendToBuyingList=function (itemIndex){
-		ShoppingListCheckOffService.removeItem(itemIndex);
+
+function foundItems() {
+	var ddo={
+		templateUrl: 'listItem.html',
+		scope: {
+				foundItem: '<',
+				onRemove: '&',
+				search: '<'
+				},
+		controller: NarrowItDownDirectiveController,
+    	controllerAs: 'cntrl',
+    	bindToController: true
 	};
-	
+
+	return ddo;
 }
-AlreadyBoughtController.$inject=['ShoppingListCheckOffService'];
-function AlreadyBoughtController(ShoppingListCheckOffService){
-	var bougtController=this;
-	bougtController.bought=ShoppingListCheckOffService.getList();
-	
+
+
+
+function NarrowItDownDirectiveController() {
+	var cntrl=this;
+	cntrl.nothing = function () {
+    	if(cntrl.foundItem.length==0)
+    		return true;
+    	if(cntrl.search===""){
+    		cntrl.foundItem=[];
+    		return true;}
+
+
+    return false;
+  };
+
 }
-function ShoppingListCheckOffService(){
+
+
+NarrowItDownController.$inject = ['MenuSearchService'];
+function NarrowItDownController(MenuSearchService) {
+	var ctrl=this;
+	ctrl.searchTerm="";
+
+
+
+	ctrl.callFunc = function () {
+	 //console.log("callFunc is called");
+	 //ctrl.found=MenuSearchService.getMatchedMenuItems(ctrl.searchTerm);
+	 //console.log("ctrl.found is :");
+	 //console.log(ctrl.foundItems);
+
+	 var promise=MenuSearchService.getMatchedMenuItems(ctrl.searchTerm);
+	 promise.then(function (result) {
+	 	ctrl.found=result;
+	 	//console.log("ctrl.found is :");
+	 	//console.log(ctrl.found);
+
+	 });
+
+	};
+	ctrl.removeItem = function (itemIndex) {
+    MenuSearchService.removeItem(itemIndex);
+  };
+
+
+}
+
+
+MenuSearchService.$inject = ['$http', 'ApiBasePath'];
+function MenuSearchService( $http , ApiBasePath) {
+
 	var service=this;
-	var shoppingList2=[
-{
-	name:"Milk",
-	quantity:" 2 bottle "
-},
-{
-	name:"Banana",
-	quantity:"2 Kg "
-},
-{
-	name:"chicken",
-	quantity:" 1 kg"
-},
-{
-	name:"Egg",
-	quantity:" 12 pec "
-},
-{
-	name:"Cookies",
-	quantity:" 12 packet "
+	//service.foundItems={};
+	service.getMatchedMenuItems=function(searchTerm) {
+		//console.log("getMatchedMenuItems is called");
+		return $http({method: "GET",
+                      url: "https://davids-restaurant.herokuapp.com/menu_items.json"
+                  	}).then(function (result) {
+					//console.log(result.data);
+
+					service.foundItems=result.data.menu_items;
+					//console.log("Service.foundItems is : "+ service.foundItems);
+					for (var i = service.foundItems.length - 1; i >= 0; i--) {
+						if(service.foundItems[i].description.search(searchTerm)==-1)
+							service.foundItems.splice(i,1);
+					}
+					//console.log("foundItems on return is : "+service.foundItems);
+					return service.foundItems;
+				});
+	};
+
+
+	service.removeItem = function (itemIndex) {
+    service.foundItems.splice(itemIndex, 1);
+  };
+
+
 }
-];
-var msg="";
-var items=[];
-    service.getItem=function(){
-		return shoppingList2;
-	};
-	service.removeItem=function(itemIndex){
-		var itemList={
-		   name:shoppingList2[itemIndex].name,
-		   quantity:shoppingList2[itemIndex].quantity
-	   };
-	      items.push(itemList);
-		shoppingList2.splice(itemIndex,1);
-	};
-	service.getList=function(){
-		return items;
-	};
-	
-}
+
+
 
 })();
