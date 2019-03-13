@@ -1,7 +1,7 @@
 <div class="container">
   
    <div ng-if="myInfoCtrl.userPref === undefined" id="user-info-not-signed-msg" ng-init="myVar = 'src/public/sign-up/sign-up.html'" > 
-    Not Signed Up Yet.  <a ng-href="{{myVar}}">Sign up Now!</a>
+    Not Signed Up Yet.  <a $window.location.href="{{myVar}}">Sign up Now!</a>
   </div>
 
   <table id="user-info-table" ng-if="myInfoCtrl.userPref != undefined" class="table table-borderless">
